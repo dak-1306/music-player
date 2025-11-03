@@ -1,0 +1,15 @@
+:root {
+  /* Background Colors */
+  --header-bg-color: linear(to right, #2ad341, #b4ff72);
+  --banner-bg-color: linear(to right, #2ad341, #9be15d, #f1fee5);
+  --footer-bg-color: linear(to right, #163a24, #296d44, #3da063);
+  --bg-dark-color: linear(to right, #2ad341, #18a558, #163a24);
+  --green-dark-color: #1b4332;
+  --bg-light-color: #f1fee5;
+
+  /* Text Colors */
+  --text-light-color: #eaeaea;
+  --text-title-color: #14532d;
+  --text-secondary-color: #2d6a4f;
+  --text-dark-color: #081c15;
+}
