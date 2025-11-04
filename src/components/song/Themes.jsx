@@ -1,70 +1,24 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import CardCircle from "../ui/CardCircle.jsx";
-import {
-  SunIcon,
-  MoonIcon,
-  MusicalNoteIcon,
-  SparklesIcon,
-  HeartIcon,
-} from "@heroicons/react/24/solid";
+import Tooltip from "../ui/Tooltip.jsx";
 
-export default function Themes() {
-  const themes = [
-    // examples: you can replace icon with image: image: '/path/to/img.jpg'
-    {
-      id: 0,
-      label: "Sunny",
-      color: "linear-gradient(135deg,#FFD97A,#FFB86B)",
-      icon: <SunIcon className="h-10 w-10 text-white" />,
-    },
-    {
-      id: 1,
-      label: "Night",
-      color: "linear-gradient(135deg,#89A7FF,#5D6BFF)",
-      icon: <MoonIcon className="h-10 w-10 text-white" />,
-    },
-    {
-      id: 2,
-      label: "Studio",
-      color: "linear-gradient(135deg,#2ad341,#18a558)",
-      icon: <MusicalNoteIcon className="h-10 w-10 text-white" />,
-    },
-    {
-      id: 3,
-      label: "Magic",
-      color: "linear-gradient(135deg,#9BE15D,#00C9FF)",
-      icon: <SparklesIcon className="h-10 w-10 text-white" />,
-    },
-    {
-      id: 4,
-      label: "Warm",
-      color: "linear-gradient(135deg,#FF8DAA,#FFB3A7)",
-      icon: <HeartIcon className="h-10 w-10 text-white" />,
-    },
-    {
-      id: 5,
-      label: "Calm",
-      color: "linear-gradient(135deg,#9AE6B4,#60A5FA)",
-      icon: <MusicalNoteIcon className="h-10 w-10 text-white" />,
-    },
-    {
-      id: 6,
-      label: "Dream",
-      color: "linear-gradient(135deg,#FBCFE8,#C4B5FD)",
-      icon: <SparklesIcon className="h-10 w-10 text-white" />,
-    },
-    {
-      id: 7,
-      label: "Soft",
-      color: "linear-gradient(135deg,#FFD7E2,#FFF5BA)",
-      icon: <HeartIcon className="h-10 w-10 text-white" />,
-    },
-  ];
+/**
+ * Themes carousel (page-based)
+ * - expects prop `themes` = array of { id, label, img?, color?, icon? }
+ * - shows `perPage` items per page (grid)
+ * - supports drag (framer-motion), keyboard and dots
+ */
+export default function Themes({
+  themes: propsThemes,
+  themesSelected,
+  setThemesSelected,
+}) {
+  const themes = propsThemes || [];
 
   const perPage = 4;
   const total = themes.length;
-  const pages = Math.ceil(total / perPage);
+  const pages = Math.max(1, Math.ceil(total / perPage));
 
   const [page, setPage] = useState(0);
   const containerRef = useRef(null);
@@ -155,37 +109,44 @@ export default function Themes() {
               }}
               aria-hidden={pageIndex !== page}
             >
-              {pageItems.map((t) => {
+              {pageItems.map((t, i) => {
                 const sizeNum = Math.max(
                   72,
                   Math.min(160, Math.floor(containerW / perPage) - 12)
                 );
+                const globalIndex = pageIndex * perPage + i;
                 return (
                   <div
-                    key={t.id}
+                    key={t.id ?? `${pageIndex}-${i}`}
                     style={{
                       width: "100%",
                       display: "flex",
                       justifyContent: "center",
                     }}
                   >
-                    <CardCircle
-                      size={sizeNum}
-                      selected={Math.floor(t.id / perPage) === page}
-                      onClick={() => {
-                        const targetPage = Math.floor(t.id / perPage);
-                        if (targetPage !== page) setPage(targetPage);
-                      }}
-                      ariaLabel={t.label}
-                      style={{ background: t.color }}
-                    >
-                      {/* If you have real images use: <img src={t.image} alt={t.label} style={{width:'100%',height:'100%',objectFit:'cover'}} /> */}
-                      {t.icon}
-                    </CardCircle>
+                    <Tooltip content={t.label} placement="top">
+                      <CardCircle
+                        size={sizeNum}
+                        selected={Math.floor(globalIndex / perPage) === page}
+                        onClick={() => {
+                          const targetPage = Math.floor(globalIndex / perPage);
+                          if (targetPage !== page) setPage(targetPage);
+                          // select theme and let parent open SongLists
+                          if (setThemesSelected) setThemesSelected(t);
+                        }}
+                        ariaLabel={t.label}
+                        image={t.img} /* use img from data */
+                        alt={t.label}
+                        style={t.color ? { background: t.color } : undefined}
+                      >
+                        {!t.img && t.icon ? t.icon : null}
+                      </CardCircle>
+                    </Tooltip>
                   </div>
                 );
               })}
-              {/* fill empty slots so grid stays consistent */}
+
+              {/* keep grid consistent on last page */}
               {pageItems.length < perPage &&
                 Array.from({ length: perPage - pageItems.length }).map(
                   (_, k) => <div key={`empty-${k}`} />

@@ -3,6 +3,7 @@
   --primary-color: #2ad341;
   --green-dark-color: #1b4332;
   --bg-light-color: #f1fee5;
+  --shadow-color: rgba(42, 211, 65, 0.3);
 
   /* Text Colors */
   --text-light-color: #eaeaea;
@@ -27,5 +28,5 @@
   background: linear-gradient(to right, #2ad341, #18a558, #163a24);
 }
 .shadow-color {
-  box-shadow: 0 4px 6px rgba(42, 211, 65, 0.3);
+  box-shadow: 0 4px 6px var(--shadow-color);
 }

@@ -1,10 +1,13 @@
 import React, { forwardRef } from "react";
+import { MusicalNoteIcon } from "@heroicons/react/24/solid";
 
 const SIZE_MAP = { sm: 72, md: 96, lg: 120 };
 
 const CardCircle = forwardRef(function CardCircle(
   {
-    children,
+    image, // string URL for image
+    alt = "",
+    children, // can be an icon fallback
     size = "md", // sm | md | lg | number
     selected = false, // subtle ring when true
     onClick,
@@ -35,7 +38,11 @@ const CardCircle = forwardRef(function CardCircle(
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : -1}
       aria-pressed={onClick ? selected : undefined}
-      aria-label={ariaLabel}
+      aria-label={
+        ariaLabel ??
+        alt ??
+        (typeof children === "string" ? children : undefined)
+      }
       onClick={onClick}
       onKeyDown={handleKeyDown}
       className={`${base} ${interactive} ${selectedClass} ${className}`}
@@ -47,8 +54,27 @@ const CardCircle = forwardRef(function CardCircle(
       }}
       {...rest}
     >
-      {/* If user passes an <img/> as children it will be clipped/fit automatically */}
-      {children}
+      {image ? (
+        <img
+          src={image}
+          alt={alt}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+          }}
+        />
+      ) : children ? (
+        // if children provided (e.g. an icon), render it centered
+        children
+      ) : (
+        // fallback icon when no image or children
+        <MusicalNoteIcon
+          className="h-8 w-8 text-[var(--primary-color)]"
+          aria-hidden="true"
+        />
+      )}
     </div>
   );
 });
