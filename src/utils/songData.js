@@ -7,7 +7,9 @@ const songData = [
     title: "Sayonara no Natsu",
     artist: "Aoi Teshima",
     duration: 210,
-    url: "https://youtu.be/QQkjoZriWNo?si=ma0YX0OdDBo9WhET",
+    provider: "youtube",
+    videoId: "QQkjoZriWNo",
+    url: "https://www.youtube.com/watch?v=QQkjoZriWNo",
     cover: sayonaraNoNatsu,
   },
   {
@@ -16,7 +18,9 @@ const songData = [
     title: "Merry-Go-Round of Life",
     artist: "Joe Hisaishi",
     duration: 180,
-    url: "https://youtu.be/J6qIzKxmW8Y?si=7QqZe8TYo7ue6NHi",
+    provider: "youtube",
+    videoId: "J6qIzKxmW8Y",
+    url: "https://www.youtube.com/watch?v=J6qIzKxmW8Y",
     cover: merryGoRoundOfLife,
   },
   // Thêm các bài hát khác tương tự

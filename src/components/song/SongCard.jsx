@@ -10,10 +10,20 @@ export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
   const { title, artist, cover, url, videoId, provider } = song;
 
   // YouTube URL từ videoId hoặc dùng url trực tiếp
-  const videoUrl =
-    provider === "youtube" && videoId
-      ? `https://www.youtube.com/watch?v=${videoId}`
-      : url;
+  let videoUrl = url;
+  if (provider === "youtube") {
+    if (videoId) {
+      videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    } else if (url && url.includes("youtu.be/")) {
+      // Convert youtu.be to youtube.com format
+      const id = url.split("youtu.be/")[1]?.split("?")[0];
+      if (id) videoUrl = `https://www.youtube.com/watch?v=${id}`;
+    }
+  }
+
+  // Debug log để kiểm tra URL
+  console.log("Song data:", { title, provider, videoId, url });
+  console.log("Final videoUrl:", videoUrl);
 
   return (
     <div className="flex items-center gap-6 p-6 bg-white rounded-lg shadow-lg max-w-5xl mx-auto mt-6">
@@ -84,9 +94,24 @@ export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
               height="100%"
               playing={isPlaying}
               controls
-              onReady={() => setPlayerReady(true)}
-              onPlay={() => onTogglePlay?.(true)}
-              onPause={() => onTogglePlay?.(false)}
+              onReady={() => {
+                console.log("ReactPlayer ready");
+                setPlayerReady(true);
+              }}
+              onPlay={() => {
+                console.log("Video playing");
+                onTogglePlay?.(true);
+              }}
+              onPause={() => {
+                console.log("Video paused");
+                onTogglePlay?.(false);
+              }}
+              onError={(error) => {
+                console.error("ReactPlayer error:", error);
+              }}
+              onBufferEnd={() => {
+                console.log("Buffer ended");
+              }}
               config={{
                 youtube: {
                   playerVars: {
@@ -102,6 +127,12 @@ export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
               <div className="text-center">
                 <p className="text-lg mb-2">Video không khả dụng</p>
                 <p className="text-sm">URL: {videoUrl || "Không có URL"}</p>
+                <p className="text-xs mt-2">
+                  Can play:{" "}
+                  {videoUrl
+                    ? ReactPlayer.canPlay(videoUrl).toString()
+                    : "false"}
+                </p>
               </div>
             </div>
           )}
