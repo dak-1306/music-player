@@ -1,29 +1,29 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import ReactPlayer from "react-player";
+import {
+  extractYouTubeId,
+  createYouTubeEmbedUrl,
+} from "../../utils/youtubeUtils.js";
 
 export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
   const [playerReady, setPlayerReady] = useState(false);
+  const [usingIframe, setUsingIframe] = useState(false);
 
   if (!song) return null;
 
   const { title, artist, cover, url, videoId, provider } = song;
 
-  // YouTube URL từ videoId hoặc dùng url trực tiếp
-  let videoUrl = url;
-  if (provider === "youtube") {
-    if (videoId) {
-      videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-    } else if (url && url.includes("youtu.be/")) {
-      // Convert youtu.be to youtube.com format
-      const id = url.split("youtu.be/")[1]?.split("?")[0];
-      if (id) videoUrl = `https://www.youtube.com/watch?v=${id}`;
-    }
-  }
+  // Lấy videoId từ nhiều nguồn khác nhau
+  const finalVideoId = videoId || extractYouTubeId(url);
+  const embedUrl = finalVideoId
+    ? createYouTubeEmbedUrl(finalVideoId, {
+        autoplay: isPlaying ? 1 : 0,
+      })
+    : null;
 
-  // Debug log để kiểm tra URL
-  console.log("Song data:", { title, provider, videoId, url });
-  console.log("Final videoUrl:", videoUrl);
+  // Debug log để kiểm tra
+  console.log("Song data:", { title, provider, videoId, url, finalVideoId });
 
   return (
     <div className="flex items-center gap-6 p-6 bg-white rounded-lg shadow-lg max-w-5xl mx-auto mt-6">
@@ -87,51 +87,41 @@ export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
         </div>
 
         <div className="aspect-video bg-black rounded-lg overflow-hidden shadow-md">
-          {videoUrl && ReactPlayer.canPlay(videoUrl) ? (
+          {finalVideoId ? (
+            // Iframe YouTube với URL được tối ưu
+            <iframe
+              src={embedUrl}
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title={title}
+              onLoad={() => {
+                console.log("YouTube iframe loaded");
+                setPlayerReady(true);
+                setUsingIframe(true);
+              }}
+            />
+          ) : url ? (
+            // Fallback ReactPlayer nếu chỉ có URL
             <ReactPlayer
-              url={videoUrl}
+              url={url}
               width="100%"
               height="100%"
               playing={isPlaying}
               controls
-              onReady={() => {
-                console.log("ReactPlayer ready");
-                setPlayerReady(true);
-              }}
-              onPlay={() => {
-                console.log("Video playing");
-                onTogglePlay?.(true);
-              }}
-              onPause={() => {
-                console.log("Video paused");
-                onTogglePlay?.(false);
-              }}
-              onError={(error) => {
-                console.error("ReactPlayer error:", error);
-              }}
-              onBufferEnd={() => {
-                console.log("Buffer ended");
-              }}
-              config={{
-                youtube: {
-                  playerVars: {
-                    showinfo: 1,
-                    controls: 1,
-                    modestbranding: 1,
-                  },
-                },
-              }}
+              onReady={() => setPlayerReady(true)}
+              onPlay={() => onTogglePlay?.(true)}
+              onPause={() => onTogglePlay?.(false)}
+              onError={(error) => console.error("ReactPlayer error:", error)}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400">
               <div className="text-center">
-                <p className="text-lg mb-2">Video không khả dụng</p>
-                <p className="text-sm">URL: {videoUrl || "Không có URL"}</p>
-                <p className="text-xs mt-2">
-                  Can play:{" "}
-                  {videoUrl
-                    ? ReactPlayer.canPlay(videoUrl).toString()
-                    : "false"}
+                <p className="text-lg mb-2">Không có video</p>
+                <p className="text-sm">
+                  Vui lòng kiểm tra videoId: {videoId || "không có"}
                 </p>
               </div>
             </div>
@@ -141,7 +131,11 @@ export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
         {/* Status */}
         <div className="mt-4 flex items-center justify-between">
           <span className="text-sm text-gray-600">
-            {playerReady ? "🎵 Sẵn sàng phát" : "⏳ Đang tải..."}
+            {isPlaying
+              ? "🎵 Đang phát..."
+              : playerReady
+              ? "⏸️ Sẵn sàng"
+              : "⏳ Đang tải..."}
           </span>
           <button
             onClick={() => onTogglePlay?.(false)}

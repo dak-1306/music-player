@@ -8,8 +8,7 @@ const songData = [
     artist: "Aoi Teshima",
     duration: 210,
     provider: "youtube",
-    videoId: "QQkjoZriWNo",
-    url: "https://www.youtube.com/watch?v=QQkjoZriWNo",
+    videoId: "QQkjoZriWNo", // Chỉ cần videoId là đủ
     cover: sayonaraNoNatsu,
   },
   {
@@ -19,8 +18,7 @@ const songData = [
     artist: "Joe Hisaishi",
     duration: 180,
     provider: "youtube",
-    videoId: "J6qIzKxmW8Y",
-    url: "https://www.youtube.com/watch?v=J6qIzKxmW8Y",
+    videoId: "J6qIzKxmW8Y", // Chỉ cần videoId là đủ
     cover: merryGoRoundOfLife,
   },
   // Thêm các bài hát khác tương tự
