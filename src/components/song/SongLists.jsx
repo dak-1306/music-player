@@ -1,22 +1,29 @@
 import Card from "../ui/Card.jsx";
-import Button from "../ui/Button.jsx";
 
-function SongLists({ songs, open, onClose }) {
+function SongLists({ songs, open, onClose, onSongSelect }) {
   if (!open) return null;
+
   return (
-    <div className="mt-6 mx-6">
+    <div className="mt-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {songs.map((song) => (
-          <Card key={song.id} song={song} />
+          <div key={song.id} onClick={() => onSongSelect?.(song)}>
+            <Card song={song} />
+          </div>
         ))}
       </div>
-      {/* simple close control (can be replaced by modal close) */}
+
+      {/* Simple close control */}
       <div className="mt-4 flex justify-end">
-        <Button variant="outline" size="md" type="button" onClick={onClose}>
-          Close
-        </Button>
+        <button
+          className="px-3 py-1 rounded bg-[var(--primary-color)] text-white hover:opacity-90 transition-opacity"
+          onClick={onClose}
+        >
+          Đóng
+        </button>
       </div>
     </div>
   );
 }
+
 export default SongLists;

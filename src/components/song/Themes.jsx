@@ -115,6 +115,10 @@ export default function Themes({
                   Math.min(160, Math.floor(containerW / perPage) - 12)
                 );
                 const globalIndex = pageIndex * perPage + i;
+
+                // chỉ đánh dấu "selected" khi theme này thực sự được chọn (themesSelected)
+                const isSelected = themesSelected?.id === t.id;
+
                 return (
                   <div
                     key={t.id ?? `${pageIndex}-${i}`}
@@ -127,15 +131,20 @@ export default function Themes({
                     <Tooltip content={t.label} placement="top">
                       <CardCircle
                         size={sizeNum}
-                        selected={Math.floor(globalIndex / perPage) === page}
+                        selected={isSelected} // <-- sửa ở đây
                         onClick={() => {
                           const targetPage = Math.floor(globalIndex / perPage);
                           if (targetPage !== page) setPage(targetPage);
-                          // select theme and let parent open SongLists
-                          if (setThemesSelected) setThemesSelected(t);
+
+                          // toggle selection: click lại sẽ bỏ chọn
+                          if (setThemesSelected) {
+                            if (themesSelected?.id === t.id)
+                              setThemesSelected(null);
+                            else setThemesSelected(t);
+                          }
                         }}
                         ariaLabel={t.label}
-                        image={t.img} /* use img from data */
+                        image={t.img}
                         alt={t.label}
                         style={t.color ? { background: t.color } : undefined}
                       >
