@@ -5,6 +5,7 @@ import themes from "../utils/Themes.js";
 import songData from "../utils/songData.js";
 import SongLists from "../components/song/SongLists.jsx";
 import SongCard from "../components/song/SongCard.jsx";
+import NightSky from "../components/ui/NightSky.jsx";
 
 import { useState, useMemo } from "react";
 
@@ -27,21 +28,22 @@ function Home() {
     <MainLayout>
       <div className="p-4">
         {themesSelected === null && <Banner />}
-
-        <Themes
-          themes={themes}
-          themesSelected={themesSelected}
-          setThemesSelected={(t) => {
-            setThemesSelected(t);
-            setOpenSongCard(true);
-            // Reset selected song when switching themes
-            setSelectedSong(null);
-            setIsPlaying(false);
-          }}
-        />
+        {selectedSong === null && (
+          <Themes
+            themes={themes}
+            themesSelected={themesSelected}
+            setThemesSelected={(t) => {
+              setThemesSelected(t);
+              setOpenSongCard(true);
+              // Reset selected song when switching themes
+              setSelectedSong(null);
+              setIsPlaying(false);
+            }}
+          />
+        )}
 
         {/* Show SongLists when theme selected but no specific song chosen */}
-        {openSongCard && !selectedSong && (
+        {openSongCard && selectedSong === null && (
           <SongLists
             songs={filteredSongs}
             open={openSongCard}
@@ -55,41 +57,28 @@ function Home() {
             }}
           />
         )}
+      </div>
 
-        {/* Show SongCard when specific song is selected */}
-        {selectedSong && (
-          <div>
-            <div className="mb-4 flex justify-between items-center">
-              <button
-                onClick={() => {
-                  setSelectedSong(null);
-                  setIsPlaying(false);
-                }}
-                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-              >
-                ← Quay lại danh sách
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedSong(null);
-                  setOpenSongCard(false);
-                  setThemesSelected(null);
-                  setIsPlaying(false);
-                }}
-                className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-md transition-colors"
-              >
-                Đóng
-              </button>
-            </div>
+      {/* NightSky overlay: only visible when playing */}
+      <NightSky visible={isPlaying} blockInteraction={true} />
 
+      {/* Floating SongCard: ensure it's above NightSky and interactive */}
+      {selectedSong && (
+        <div
+          className="fixed inset-0 flex items-center justify-center pointer-events-none"
+          style={{ zIndex: 50 }}
+        >
+          <div className="pointer-events-auto">
             <SongCard
               song={selectedSong}
               isPlaying={isPlaying}
               onTogglePlay={setIsPlaying}
+              setSelectedSong={setSelectedSong}
+              setIsPlaying={setIsPlaying}
             />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </MainLayout>
   );
 }

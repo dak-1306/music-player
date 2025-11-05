@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import Button from "../ui/Button.jsx";
+import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import ReactPlayer from "react-player";
 import {
   extractYouTubeId,
   createYouTubeEmbedUrl,
 } from "../../utils/youtubeUtils.js";
 
-export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
+export default function SongCard({
+  song,
+  isPlaying = false,
+  onTogglePlay,
+  setSelectedSong,
+  setIsPlaying,
+}) {
   const [playerReady, setPlayerReady] = useState(false);
   const [usingIframe, setUsingIframe] = useState(false);
 
@@ -26,11 +34,13 @@ export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
   console.log("Song data:", { title, provider, videoId, url, finalVideoId });
 
   return (
-    <div className="flex items-center gap-6 p-6 bg-white rounded-lg shadow-lg max-w-5xl mx-auto mt-6">
+    // giới hạn chiều rộng để không chiếm toàn bộ viewport khi ở overlay
+    <div className="flex items-center gap-6 p-6 w-auto max-w-4xl mx-auto mt-6">
       {/* Spinning Disc */}
       <div className="relative flex-shrink-0">
         <motion.div
-          className="relative w-48 h-48 rounded-full overflow-hidden shadow-lg"
+          // giảm 1 chút so với w-60 để cân bằng với khung video mở rộng
+          className="relative w-60 h-60 rounded-full overflow-hidden shadow-lg"
           animate={{ rotate: isPlaying ? 360 : 0 }}
           transition={{
             duration: 3,
@@ -78,15 +88,9 @@ export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
       </div>
 
       {/* Video Player Section */}
-      <div className="flex-1">
-        <div className="mb-4">
-          <h3 className="text-2xl font-bold text-[var(--text-title-color)] mb-1">
-            {title}
-          </h3>
-          <p className="text-lg text-[var(--text-secondary-color)]">{artist}</p>
-        </div>
-
-        <div className="aspect-video bg-black rounded-lg overflow-hidden shadow-md">
+      {/* đặt basis để video không ép toàn layout, thêm max-w để responsive */}
+      <div className="flex-1 w-96">
+        <div className="w-full aspect-video bg-[var(--bg-dark-color)] rounded-lg overflow-hidden shadow-color shadow-md">
           {finalVideoId ? (
             // Iframe YouTube với URL được tối ưu
             <iframe
@@ -129,7 +133,7 @@ export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
         </div>
 
         {/* Status */}
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex items-center justify-between p-2 bg-[var(--bg-light-color)] rounded-lg shadow-md shadow-color">
           <span className="text-sm text-gray-600">
             {isPlaying
               ? "🎵 Đang phát..."
@@ -137,12 +141,29 @@ export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
               ? "⏸️ Sẵn sàng"
               : "⏳ Đang tải..."}
           </span>
-          <button
-            onClick={() => onTogglePlay?.(false)}
-            className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-          >
-            Dừng phát
-          </button>
+
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-[var(--text-title-color)] mb-1">
+              {title}
+            </h3>
+            <p className="text-lg text-[var(--text-secondary-color)]">
+              {artist}
+            </p>
+          </div>
+
+          <div>
+            <Button
+              onClick={() => {
+                setSelectedSong(null);
+                setIsPlaying(false);
+              }}
+              size="md"
+              type="button"
+              variant="secondary"
+            >
+              <ArrowLeftIcon className="w-5 h-5 inline-block" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>
