@@ -3,9 +3,10 @@ import howl from "../assets/img/themes/howl.jpg";
 import chihiro from "../assets/img/themes/chihiro.jpg";
 import totoro from "../assets/img/themes/totoro.jpg";
 import majo from "../assets/img/themes/majo.jpg";
-import kazetachinu from "../assets/img/themes/kazetachinu.jpg";
+import ForgottenWords from "../assets/img/themes/ForgottenWords.jpg";
 import laputa from "../assets/img/themes/laputa.jpg";
 import karigurashi from "../assets/img/themes/karigurashi.jpg";
+import Mononoke from "../assets/img/themes/Mononoke.jpg";
 
 const themes = [
   {
@@ -40,9 +41,9 @@ const themes = [
   },
   {
     id: 5,
-    key: "theWindRaise",
-    label: "The Wind Rises",
-    img: kazetachinu,
+    key: "forgottenWords",
+    label: "Forgotten Words",
+    img: ForgottenWords,
   },
   {
     id: 6,
@@ -55,6 +56,12 @@ const themes = [
     key: "Arrietty",
     label: "The Secret World of Arrietty",
     img: karigurashi,
+  },
+  {
+    id: 8,
+    key: "PrincessMononoke",
+    label: "Princess Mononoke",
+    img: Mononoke,
   },
 ];
 
