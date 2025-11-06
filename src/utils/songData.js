@@ -10,7 +10,7 @@ import ForgottenWords_dezbee from "../assets/img/song/ForgottenWords_DezBee.jpg"
 import PathOfTheWind from "../assets/img/song/PathOfTheWind.jpg";
 import MeguruKisetsu from "../assets/img/song/MeguruKisetsu.jpg";
 import MeguruKisetsu_piano from "../assets/img/song/MeguruLisetsu_piano.jpg";
-import CarringYou from "../assets/img/song/CarringYou.jpg";
+import CarringYou from "../assets/img/song/carringYou.jpg";
 import CarringYou_piano from "../assets/img/song/CarringYou_piano.jpg";
 import CarringYou_Joshi from "../assets/img/song/CarringYou_Joshi.jpg";
 import ArrietySong from "../assets/img/song/ArrietySong.jpg";
