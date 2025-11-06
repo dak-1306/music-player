@@ -3,7 +3,7 @@ import howl from "../assets/img/themes/howl.jpg";
 import chihiro from "../assets/img/themes/chihiro.jpg";
 import totoro from "../assets/img/themes/totoro.jpg";
 import majo from "../assets/img/themes/majo.jpg";
-import ForgottenWords from "../assets/img/themes/forgottenWords.jpg";
+import forgottenWords from "../assets/img/themes/forgottenWords.jpg";
 import laputa from "../assets/img/themes/laputa.jpg";
 import karigurashi from "../assets/img/themes/karigurashi.jpg";
 import Mononoke from "../assets/img/themes/mononoke.jpg";
@@ -43,7 +43,7 @@ const themes = [
     id: 5,
     key: "forgottenWords",
     label: "Forgotten Words",
-    img: ForgottenWords,
+    img: forgottenWords,
   },
   {
     id: 6,
