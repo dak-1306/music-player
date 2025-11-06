@@ -12,7 +12,7 @@ import MeguruKisetsu from "../assets/img/song/meguruKisetsu.jpg";
 import MeguruKisetsu_piano from "../assets/img/song/meguruLisetsu_piano.jpg";
 import CarringYou from "../assets/img/song/carringYou.jpg";
 import CarringYou_piano from "../assets/img/song/carringYou_piano.jpg";
-import CarringYou_Joshi from "../assets/img/song/CarringYou_Joshi.jpg";
+import CarringYou_Joshi from "../assets/img/song/carringYou_Joshi.jpg";
 import ArrietySong from "../assets/img/song/arrietySong.jpg";
 import Mononoke_main from "../assets/img/song/mononoke_main.jpg";
 import Mononoke_hime from "../assets/img/song/mononoke_hime.jpg";
