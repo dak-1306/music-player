@@ -1,26 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import Button from "../ui/Button.jsx";
-import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import ReactPlayer from "react-player";
 import {
   extractYouTubeId,
   createYouTubeEmbedUrl,
 } from "../../utils/youtubeUtils.js";
+import WaveSurfer from "./WaveSurfer.jsx";
 
-export default function SongCard({
-  song,
-  isPlaying = false,
-  onTogglePlay,
-  setSelectedSong,
-  setIsPlaying,
-}) {
+export default function SongCard({ song, isPlaying = false, onTogglePlay }) {
   const [playerReady, setPlayerReady] = useState(false);
   const [usingIframe, setUsingIframe] = useState(false);
 
+  // simulated progress 0..1 for the mock waveform
+  const [simProgress, setSimProgress] = useState(0);
+  const progRef = useRef(simProgress);
+
+  // simple simulator: advance progress while playing, loop when reaches end
+  useEffect(() => {
+    progRef.current = simProgress;
+  }, [simProgress]);
+
+  useEffect(() => {
+    let raf;
+    let last = performance.now();
+    const tick = (now) => {
+      const dt = (now - last) / 1000;
+      last = now;
+      if (isPlaying) {
+        const speed = 0.02; // progress per second (tweak for visual)
+        const next = Math.min(1, progRef.current + speed * dt);
+        progRef.current = next;
+        setSimProgress(next);
+        if (next >= 1) {
+          // loop for demo
+          progRef.current = 0;
+          setSimProgress(0);
+        }
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [isPlaying]);
+
   if (!song) return null;
 
-  const { title, artist, cover, url, videoId, provider } = song;
+  const { title, cover, url, videoId, provider } = song;
 
   // Lấy videoId từ nhiều nguồn khác nhau
   const finalVideoId = videoId || extractYouTubeId(url);
@@ -88,7 +113,6 @@ export default function SongCard({
       </div>
 
       {/* Video Player Section */}
-      {/* đặt basis để video không ép toàn layout, thêm max-w để responsive */}
       <div className="flex-1 w-96">
         <div className="w-full aspect-video bg-[var(--bg-dark-color)] rounded-lg overflow-hidden shadow-color shadow-md">
           {finalVideoId ? (
@@ -133,37 +157,26 @@ export default function SongCard({
         </div>
 
         {/* Status */}
-        <div className="mt-4 flex items-center justify-between p-2 bg-[var(--bg-light-color)] rounded-lg shadow-md shadow-color">
-          <span className="text-sm text-gray-600">
-            {isPlaying
-              ? "🎵 Đang phát..."
-              : playerReady
-              ? "⏸️ Sẵn sàng"
-              : "⏳ Đang tải..."}
-          </span>
-
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-[var(--text-title-color)] mb-1">
+        <div className="mt-4 p-2 bg-[var(--bg-light-color)] rounded-lg shadow-md shadow-color">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm text-gray-600">
+              {isPlaying
+                ? "🎵 Đang phát..."
+                : playerReady
+                ? "⏸️ Sẵn sàng"
+                : "⏳ Đang tải..."}
+            </span>
+            <div className="text-sm text-[var(--text-secondary-color)]">
               {title}
-            </h3>
-            <p className="text-lg text-[var(--text-secondary-color)]">
-              {artist}
-            </p>
+            </div>
           </div>
 
-          <div>
-            <Button
-              onClick={() => {
-                setSelectedSong(null);
-                setIsPlaying(false);
-              }}
-              size="md"
-              type="button"
-              variant="secondary"
-            >
-              <ArrowLeftIcon className="w-5 h-5 inline-block" />
-            </Button>
-          </div>
+          {/* Mock waveform */}
+          <WaveSurfer
+            progress={simProgress}
+            isPlaying={isPlaying}
+            height={56}
+          />
         </div>
       </div>
     </div>

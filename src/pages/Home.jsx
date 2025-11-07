@@ -5,17 +5,25 @@ import themes from "../utils/Themes.js";
 import songData from "../utils/songData.js";
 import SongLists from "../components/song/SongLists.jsx";
 import SongCard from "../components/song/SongCard.jsx";
+import PlayerControl from "../components/song/PlayerControl.jsx";
 import NightSky from "../components/ui/NightSky.jsx";
+import { usePlayerStore } from "../store/playerStore.js";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 
 function Home() {
-  const [themesSelected, setThemesSelected] = useState(null);
-  const [openSongCard, setOpenSongCard] = useState(false);
-  const [selectedSong, setSelectedSong] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const {
+    themesSelected,
+    setTheme,
+    openSongList,
+    closeSongList,
+    selectedSong,
+    setSelectedSong,
+    isPlaying,
+    togglePlay,
+    setCloseSongCard,
+  } = usePlayerStore();
 
-  // only songs for selected theme (empty when none selected)
   const filteredSongs = useMemo(
     () =>
       themesSelected
@@ -27,42 +35,27 @@ function Home() {
   return (
     <MainLayout>
       <div className="p-4">
-        {themesSelected === null && <Banner />}
-        {selectedSong === null && (
+        {!themesSelected && <Banner />}
+        {!selectedSong && (
           <Themes
             themes={themes}
             themesSelected={themesSelected}
-            setThemesSelected={(t) => {
-              setThemesSelected(t);
-              setOpenSongCard(true);
-              // Reset selected song when switching themes
-              setSelectedSong(null);
-              setIsPlaying(false);
-            }}
+            setThemesSelected={setTheme}
           />
         )}
 
-        {/* Show SongLists when theme selected but no specific song chosen */}
-        {openSongCard && selectedSong === null && (
+        {openSongList && !selectedSong && (
           <SongLists
             songs={filteredSongs}
-            open={openSongCard}
-            onClose={() => {
-              setOpenSongCard(false);
-              setThemesSelected(null);
-            }}
-            onSongSelect={(song) => {
-              setSelectedSong(song);
-              setIsPlaying(false);
-            }}
+            open={openSongList}
+            onClose={closeSongList}
+            onSongSelect={setSelectedSong}
           />
         )}
       </div>
 
-      {/* NightSky overlay: only visible when playing */}
       <NightSky visible={isPlaying} blockInteraction={true} />
 
-      {/* Floating SongCard: ensure it's above NightSky and interactive */}
       {selectedSong && (
         <div
           className="fixed inset-0 flex items-center justify-center pointer-events-none"
@@ -72,9 +65,18 @@ function Home() {
             <SongCard
               song={selectedSong}
               isPlaying={isPlaying}
-              onTogglePlay={setIsPlaying}
-              setSelectedSong={setSelectedSong}
-              setIsPlaying={setIsPlaying}
+              onTogglePlay={togglePlay}
+            />
+            <PlayerControl
+              song={selectedSong}
+              isPlaying={isPlaying}
+              setCloseSongCard={setCloseSongCard}
+              onPlayPause={togglePlay}
+              onNext={() => usePlayerStore.getState().nextSong()}
+              onPrev={() => usePlayerStore.getState().prevSong()}
+              onToggleLike={() => {}}
+              isLiked={false}
+              disabled={false}
             />
           </div>
         </div>
