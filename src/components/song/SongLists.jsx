@@ -1,4 +1,5 @@
 import Card from "../ui/Card.jsx";
+import Button from "../ui/Button.jsx";
 
 function SongLists({ songs, open, onClose, onSongSelect }) {
   if (!open) return null;
@@ -14,14 +15,13 @@ function SongLists({ songs, open, onClose, onSongSelect }) {
       </div>
 
       {/* Simple close control */}
-      <div className="mt-4 flex justify-end">
-        <button
-          className="px-3 py-1 rounded bg-[var(--primary-color)] text-white hover:opacity-90 transition-opacity"
-          onClick={onClose}
-        >
-          Đóng
-        </button>
-      </div>
+      {onClose && (
+        <div className="mt-4 flex justify-center">
+          <Button variant="secondary" onClick={onClose}>
+            Đóng
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

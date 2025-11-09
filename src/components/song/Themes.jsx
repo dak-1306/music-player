@@ -72,7 +72,7 @@ export default function Themes({
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <p className="mb-4 text-[var(--text-title-color)] text-lg text-center">
+      <p className="mb-2 mt-4 text-[var(--text-title-color)] text-lg text-center">
         Select a theme for the music player:
       </p>
 

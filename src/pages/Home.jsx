@@ -35,7 +35,7 @@ function Home() {
   return (
     <MainLayout>
       <div className="p-4">
-        {!themesSelected && <Banner />}
+        {!themesSelected && !selectedSong && <Banner />}
         {!selectedSong && (
           <Themes
             themes={themes}
