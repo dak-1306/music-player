@@ -54,7 +54,15 @@ function Home() {
         )}
       </div>
 
-      <NightSky visible={isPlaying} blockInteraction={true} />
+      {/* NightSky: music mode, show comets, fade-in when isPlaying */}
+      <NightSky
+        visible={isPlaying}
+        mode="music"
+        immediate={false}
+        showComets={true}
+        starCount={36}
+        blockInteraction={true}
+      />
 
       {selectedSong && (
         <div

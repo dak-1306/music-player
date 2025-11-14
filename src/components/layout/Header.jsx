@@ -22,10 +22,10 @@ function Header() {
           </Link>
         </Tooltip>
         <Link
-          to="/about"
+          to="/login"
           className="ml-4 text-[var(--green-dark-color)] hover:text-[var(--text-secondary-color)] text-lg font-medium"
         >
-          About
+          Login
         </Link>
       </nav>
     </header>

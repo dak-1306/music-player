@@ -36,46 +36,48 @@ export default function PlayerControl({
   setCloseSongCard,
 }) {
   return (
-    <div className="flex items-center gap-6 w-full max-w-4xl mx-auto px-4 py-3">
+    <div className="flex justify-between items-center gap-6 w-full max-w-4xl mx-auto px-3 py-3 bg-[var(--bg-light-color)] rounded-lg shadow-lg pointer-events-auto">
       {/* Prev */}
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={onPrev}
-        disabled={disabled}
-        ariaLabel="Previous"
-        className="p-2"
-      >
-        <ChevronLeftIcon className="w-5 h-5 text-[var(--text-muted-color)]" />
-      </Button>
+      <div>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={onPrev}
+          disabled={disabled}
+          ariaLabel="Previous"
+          className="p-2"
+        >
+          <ChevronLeftIcon className="w-5 h-5 text-[var(--text-muted-color)]" />
+        </Button>
 
-      {/* Play / Pause (prominent) */}
-      <Button
-        size="md"
-        variant="primary"
-        onClick={onPlayPause}
-        disabled={disabled}
-        ariaLabel={isPlaying ? "Pause" : "Play"}
-        className="flex items-center justify-center w-12 h-12 p-0 rounded-full"
-      >
-        {isPlaying ? (
-          <PauseIcon className="w-5 h-5" />
-        ) : (
-          <PlayIcon className="w-5 h-5 ml-[2px]" />
-        )}
-      </Button>
+        {/* Play / Pause (prominent) */}
+        <Button
+          size="md"
+          variant="primary"
+          onClick={onPlayPause}
+          disabled={disabled}
+          ariaLabel={isPlaying ? "Pause" : "Play"}
+          className="flex items-center justify-center w-12 h-12 p-0 rounded-full"
+        >
+          {isPlaying ? (
+            <PauseIcon className="w-5 h-5" />
+          ) : (
+            <PlayIcon className="w-5 h-5 ml-[2px]" />
+          )}
+        </Button>
 
-      {/* Next */}
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={onNext}
-        disabled={disabled}
-        ariaLabel="Next"
-        className="p-2"
-      >
-        <ChevronRightIcon className="w-5 h-5 text-[var(--text-muted-color)]" />
-      </Button>
+        {/* Next */}
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={onNext}
+          disabled={disabled}
+          ariaLabel="Next"
+          className="p-2"
+        >
+          <ChevronRightIcon className="w-5 h-5 text-[var(--text-muted-color)]" />
+        </Button>
+      </div>
 
       {/* Song info */}
       <div className="text-center">
@@ -88,29 +90,31 @@ export default function PlayerControl({
       </div>
 
       {/* Favorite */}
-      <Button
-        size="sm"
-        variant={isLiked ? "secondary" : "outline"}
-        onClick={onToggleLike}
-        disabled={disabled}
-        ariaLabel={isLiked ? "Unfavorite" : "Add to favorites"}
-        className="p-2"
-      >
-        <HeartIcon
-          className={`w-5 h-5 ${
-            isLiked ? "text-white" : "text-[var(--text-muted-color)]"
-          }`}
-        />
-      </Button>
+      <div className="flex items-center gap-3">
+        <Button
+          size="sm"
+          variant={isLiked ? "secondary" : "outline"}
+          onClick={onToggleLike}
+          disabled={disabled}
+          ariaLabel={isLiked ? "Unfavorite" : "Add to favorites"}
+          className="p-2"
+        >
+          <HeartIcon
+            className={`w-5 h-5 ${
+              isLiked ? "text-white" : "text-[var(--text-muted-color)]"
+            }`}
+          />
+        </Button>
 
-      <Button
-        onClick={setCloseSongCard}
-        size="md"
-        type="button"
-        variant="secondary"
-      >
-        <ArrowLeftIcon className="w-5 h-5 inline-block" />
-      </Button>
+        <Button
+          onClick={setCloseSongCard}
+          size="md"
+          type="button"
+          variant="secondary"
+        >
+          <ArrowLeftIcon className="w-5 h-5 inline-block" />
+        </Button>
+      </div>
     </div>
   );
 }
